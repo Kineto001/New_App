@@ -43,8 +43,14 @@
         <main>
             <!-- Introduction Section -->
             <section class="content-section">
-                <h2>Welcome to VidhAI</h2>
-                <p><strong>Your AI-powered guide for competitive exam preparation.</strong></p>
+                <!-- NEW: Title with Logo -->
+                <div class="intro-header">
+                    <img src="logo.png" alt="VidhAI Logo" class="intro-logo">
+                    <div class="intro-title">
+                        <h2>Welcome to VidhAI</h2>
+                        <p><strong>Your AI-powered guide for competitive exam preparation.</strong></p>
+                    </div>
+                </div>
                 <p>
                     VidhAI is a revolutionary platform designed to help you conquer competitive exams with the power of artificial intelligence. We provide personalized study plans, interactive quizzes, and in-depth analysis to track your progress and identify areas for improvement. Our mission is to make quality education accessible and effective for every aspirant.
                 </p>
@@ -88,10 +94,30 @@
             <h3>Contact Us</h3>
             <p><strong>Email:</strong> kjayasuriyadir@gmail.com</p>
             <p><strong>Phone:</strong> +91 8838246177</p>
-            <p><strong>Buy me a Coffee ☕ :</strong> +91 8838246177</p>
+            <!-- UPDATED: "Buy me a Coffee" CTA -->
+            <div class="coffee-cta">
+                 <button id="open-upi-modal" class="coffee-button">Buy me a Coffee ☕</button>
+            </div>
             <p><strong>Address:</strong> 123 Learning Street, Education City, India</p>
         </footer>
     </div>
+
+    <!-- NEW: UPI Payment Modal -->
+    <div id="upi-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" aria-label="Close modal">×</button>
+            <h3>Pay with UPI</h3>
+            <p>Scan the QR code with your UPI app</p>
+            <!-- IMPORTANT: Create a QR code for your UPI and save it as upi-qr.png -->
+            <img src="upi-qr.png" alt="UPI QR Code for 8838246177@ikwik" class="upi-qr-code">
+            <p>Or copy UPI ID:</p>
+            <div class="upi-id-container">
+                <span id="upi-id-text">8838246177@ikwik</span>
+                <button id="copy-upi-id-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Floating Action Buttons -->
     <div class="floating-links">
@@ -101,4 +127,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
