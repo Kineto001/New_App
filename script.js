@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navDrawer.classList.contains('open')) toggleNav();
     });
 
-    // --- NEW: Advanced Touch and Drag Slider Logic ---
+    // --- Advanced Touch and Drag Slider Logic (unchanged) ---
     const slider = document.querySelector('.slider');
     const slides = document.querySelectorAll('.slide');
     const prevButton = document.querySelector('.prev');
@@ -41,24 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totalSlides = slides.length;
 
-    // Add event listeners for touch and mouse
     slides.forEach((slide, index) => {
-        // Disable default image drag behavior
         slide.querySelector('img').addEventListener('dragstart', (e) => e.preventDefault());
-
-        // Touch events
         slide.addEventListener('touchstart', touchStart(index));
         slide.addEventListener('touchend', touchEnd);
         slide.addEventListener('touchmove', touchMove);
-
-        // Mouse events
         slide.addEventListener('mousedown', touchStart(index));
         slide.addEventListener('mouseup', touchEnd);
         slide.addEventListener('mouseleave', touchEnd);
         slide.addEventListener('mousemove', touchMove);
     });
 
-    // Make arrows work
     prevButton.addEventListener('click', showPrevSlide);
     nextButton.addEventListener('click', showNextSlide);
 
@@ -67,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentIndex = index;
             startPos = getPositionX(event);
             isDragging = true;
-            slider.style.transition = 'none'; // Remove transition during drag
+            slider.style.transition = 'none';
             animationID = requestAnimationFrame(animation);
             slider.classList.add('grabbing');
         }
@@ -77,20 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging) return;
         isDragging = false;
         cancelAnimationFrame(animationID);
-
         const movedBy = currentTranslate - prevTranslate;
-
-        // Snap to next/prev slide if moved more than a threshold
-        if (movedBy < -100 && currentIndex < totalSlides - 1) {
-            currentIndex += 1;
-        }
-
-        if (movedBy > 100 && currentIndex > 0) {
-            currentIndex -= 1;
-        }
-
+        if (movedBy < -100 && currentIndex < totalSlides - 1) currentIndex += 1;
+        if (movedBy > 100 && currentIndex > 0) currentIndex -= 1;
         setPositionByIndex();
-
         slider.classList.remove('grabbing');
     }
 
@@ -115,11 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setPositionByIndex() {
-        // Get the width of a single slide
         const slideWidth = slides[0].clientWidth;
         currentTranslate = currentIndex * -slideWidth;
         prevTranslate = currentTranslate;
-        slider.style.transition = 'transform 0.4s ease-out'; // Add back transition
+        slider.style.transition = 'transform 0.4s ease-out';
         setSliderPosition();
         updateArrowState();
     }
@@ -143,6 +125,49 @@ document.addEventListener('DOMContentLoaded', () => {
         nextButton.style.display = (currentIndex === totalSlides - 1) ? 'none' : 'flex';
     }
 
-    // Initial setup
     updateArrowState();
+
+    // --- NEW: UPI Modal Logic ---
+    const upiModalOverlay = document.getElementById('upi-modal-overlay');
+    const openModalBtn = document.getElementById('open-upi-modal');
+    const closeModalBtn = upiModalOverlay.querySelector('.close-modal');
+    const copyUpiBtn = document.getElementById('copy-upi-id-btn');
+    const upiIdTextElement = document.getElementById('upi-id-text');
+
+    const openUpiModal = () => {
+        upiModalOverlay.style.display = 'flex';
+    };
+
+    const closeUpiModal = () => {
+        upiModalOverlay.style.display = 'none';
+        copyUpiBtn.innerText = 'Copy'; // Reset copy button text
+    };
+
+    openModalBtn.addEventListener('click', openUpiModal);
+    closeModalBtn.addEventListener('click', closeUpiModal);
+
+    upiModalOverlay.addEventListener('click', (event) => {
+        if (event.target === upiModalOverlay) {
+            closeUpiModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && upiModalOverlay.style.display === 'flex') {
+            closeUpiModal();
+        }
+    });
+
+    copyUpiBtn.addEventListener('click', () => {
+        const upiId = upiIdTextElement.innerText;
+        navigator.clipboard.writeText(upiId).then(() => {
+            copyUpiBtn.innerText = 'Copied!';
+            setTimeout(() => {
+                copyUpiBtn.innerText = 'Copy';
+            }, 2000); // Reset after 2 seconds
+        }).catch(err => {
+            console.error('Failed to copy UPI ID: ', err);
+            alert('Could not copy text. Please copy it manually.');
+        });
+    });
 });
